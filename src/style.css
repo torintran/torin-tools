@@ -352,3 +352,15 @@ dd { margin: 0; font-family: var(--mantine-font-family-monospace); }
 @media (prefers-reduced-motion: reduce) {
   .tool-card.mantine-Card-root { transition: none; }
 }
+.diff-added { background: #def1e3; color: #17492b; }
+.diff-removed { background: #fbe5e5; color: #702424; }
+.diff-result { margin-top: 18px; }
+.diff-counts { display: flex; flex-wrap: wrap; gap: 6px; }
+.diff-table td { vertical-align: top; }
+.diff-line { display: grid; grid-template-columns: 4ch 1ch minmax(0, 1fr); gap: 6px; font-family: monospace; }
+.diff-line code { white-space: pre-wrap; overflow-wrap: anywhere; }
+.diff-number, .diff-ending { opacity: .8; }
+.diff-marker { font-weight: 700; }
+@media (max-width: 520px) {
+  .diff-line { grid-template-columns: 3ch 1ch minmax(0, 1fr); gap: 3px; }
+}

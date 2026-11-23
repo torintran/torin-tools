@@ -1,4 +1,5 @@
-FROM node:22-bookworm-slim AS build
+ARG NODE_VERSION=26.13.1
+FROM node:${NODE_VERSION}-bookworm-slim AS build
 
 WORKDIR /app
 COPY package.json package-lock.json ./
@@ -10,7 +11,7 @@ RUN npm test && npm run build \
     && mkdir -p dist/downloads \
     && cp LICENSE NOTICE dist/
 
-FROM node:22-bookworm-slim AS runtime
+FROM node:${NODE_VERSION}-bookworm-slim AS runtime
 
 WORKDIR /app
 ENV NODE_ENV=production \

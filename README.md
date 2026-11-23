@@ -1,6 +1,6 @@
 # Torin Tools
 
-Local-first developer utilities for the web and Windows, with an English and Vietnamese interface. Seven tools process data on your device. Postman Backup connects to the Postman API.
+Local-first developer utilities for the web and Windows, with an English and Vietnamese interface. Eleven tools process data on your device. Postman Backup connects to the Postman API.
 
 [Downloads](https://github.com/torintran/torin-tools/releases) · [Roadmap](docs/roadmap.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md)
 
@@ -15,6 +15,10 @@ Local-first developer utilities for the web and Windows, with an English and Vie
 | [Whitespace remover](docs/tools/whitespace-remover/spec.md) | Strip whitespace and line breaks from text. |
 | [JWT Decoder](docs/tools/jwt/spec.md) | Inspect claims, sign JWTs, and verify signatures with a supplied key. |
 | [UUIDs generator](docs/tools/uuid/spec.md) | Generate Nil, Max, and UUID versions 1, 3, 4, 5, 6, and 7. |
+| [CSR Generator](docs/tools/csr/spec.md) | Generate a PKCS #10 CSR and RSA private key locally. |
+| [MAC address lookup](docs/tools/mac-address-lookup/spec.md) | Find the registered organization for a MAC address or OUI. |
+| [Temperature converter](docs/tools/temperature-converter/spec.md) | Convert Celsius, Fahrenheit, and kelvin. |
+| [Text diff](docs/tools/text-diff/spec.md) | Compare texts and highlight added and removed lines. |
 | [Postman Backup](docs/tools/postman/spec.md) | Export workspace metadata, collections, environments, and globals to a ZIP. |
 
 Use **Ctrl+K** or **⌘K** to find a tool. Local tools work offline once the web app has cached their assets. Postman Backup requires network access and an API key. [Data handling and privacy](docs/privacy.md).
@@ -31,7 +35,7 @@ docker compose up --build -d
 
 Open [localhost:4289](http://localhost:4289/).
 
-**Develop locally.** With Node.js 22 and npm:
+**Develop locally.** With Node.js (version in `.nvmrc`) and npm:
 
 ```sh
 npm ci

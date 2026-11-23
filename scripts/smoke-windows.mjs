@@ -60,7 +60,7 @@ try {
     }
   });
   assert.equal(result, 'Invalid Postman request.');
-  await page.getByRole('link', { name: 'Downloads' }).click();
+  await page.getByRole('link', { name: 'Install & update' }).click();
   await page.route('https://api.github.com/repos/torintran/torin-tools/releases/latest', route =>
     route.fulfill({ json: { tag_name: 'v99.0.0' }, headers: { 'Access-Control-Allow-Origin': '*' } }));
   await page.getByRole('button', { name: 'Check for updates' }).click();

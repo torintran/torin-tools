@@ -10,6 +10,26 @@ import {
   generateV6, generateV7, uuidNamespaces,
 } from '../src/tools/uuid/generate.ts';
 import { md5 } from '../src/tools/uuid/md5.ts';
+import { lookupMac, normalizeMac } from '../src/tools/mac-address-lookup/lookup.ts';
+import { convertTemperature } from '../src/tools/temperature-converter/convert.ts';
+
+test('MAC lookup normalizes inputs and prefers the longest registered prefix', async () => {
+  assert.equal(normalizeMac('C85C.E27A.BCDE'), 'C85CE27ABCDE');
+  assert.equal(normalizeMac('C8:5C:E2-7A:BC:DE'), undefined);
+  const result = await lookupMac('C85CE27ABCDE');
+  assert.equal(result.kind, 'match');
+  if (result.kind === 'match') assert.equal(result.prefix, 'C85CE27');
+  assert.deepEqual(await lookupMac('021122334455'), { kind: 'local' });
+  assert.deepEqual(await lookupMac('011122334455'), { kind: 'multicast' });
+});
+
+test('temperature converter handles reference points and rejects values below absolute zero', () => {
+  assert.deepEqual(convertTemperature('-459.67', 'F'), { F: -459.67, C: -273.15, K: 0 });
+  assert.equal(convertTemperature('100', 'C')?.K, 373.15);
+  assert.equal(convertTemperature('32', 'F')?.C, 0);
+  assert.equal(convertTemperature('-0.01', 'K'), undefined);
+  assert.equal(convertTemperature('0x20', 'C'), undefined);
+});
 import { convertUrl } from '../src/tools/url-encoder/codec.ts';
 import {
   convertDateTime, formatExcelSerial, formatMongoObjectId, type DateOutputId,

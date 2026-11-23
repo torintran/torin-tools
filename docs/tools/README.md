@@ -10,5 +10,9 @@
 | Date-time converter | [Đặc tả](date-time-converter/spec.md) | [23/11/2026 · Hồ sơ ban đầu](date-time-converter/archive/2026-11-23-initial.md) |
 | JSON formatter | [Đặc tả](json-formatter/spec.md) | [23/11/2026 · Hồ sơ ban đầu](json-formatter/archive/2026-11-23-initial.md) · [JSONC](json-formatter/archive/2026-11-23-jsonc.md) |
 | Whitespace remover | [Đặc tả](whitespace-remover/spec.md) | [23/11/2026 · Hồ sơ ban đầu](whitespace-remover/archive/2026-11-23-initial.md) |
+| CSR Generator | [Đặc tả](csr/spec.md) | [Hồ sơ ban đầu](csr/archive/2026-11-23-initial.md) |
+| MAC address lookup | [Đặc tả](mac-address-lookup/spec.md) | [Hồ sơ ban đầu](mac-address-lookup/archive/2026-11-23-initial.md) |
+| Temperature converter | [Đặc tả](temperature-converter/spec.md) | [Hồ sơ ban đầu](temperature-converter/archive/2026-11-23-initial.md) |
+| Text diff | [Đặc tả](text-diff/spec.md) | [Hồ sơ ban đầu](text-diff/archive/2026-11-23-initial.md) |
 
 [Quy chuẩn phát triển](../tool-development.md) · [Mẫu hồ sơ](TEMPLATE.md).

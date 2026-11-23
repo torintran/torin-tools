@@ -1,6 +1,6 @@
 {
   "name": "torin-tools",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -15,12 +15,16 @@
     "@fontsource/be-vietnam-pro": "5.3.0",
     "@mantine/core": "9.8.2",
     "@mantine/hooks": "9.8.2",
+    "@peculiar/x509": "3.1.0",
     "@tauri-apps/api": "^2.0.0",
+    "diff": "9.0.0",
     "fflate": "^0.8.2",
     "jose": "6.2.18",
     "lucide-react": "1.77.0",
+    "oui-data": "2.1.65",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "reflect-metadata": "0.2.2"
   },
   "devDependencies": {
     "@playwright/test": "^1.56.0",

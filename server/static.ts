@@ -10,6 +10,8 @@ const shellFiles = new Set([
   'icon-192.png', 'icon-512.png', 'JOSE-LICENSE.txt',
   'Torin_Favicon.svg', 'Torin_Favicon_Round.svg', 'Torin_Logo_Ngang.svg', 'Torin_Logo_Ngang_Nen_Toi.svg',
   'MANTINE-LICENSE.txt', 'LUCIDE-LICENSE.txt', 'BE-VIETNAM-PRO-LICENSE.txt',
+  'PECULIAR-X509-LICENSE.txt', 'REFLECT-METADATA-LICENSE.txt',
+  'OUI-DATA-LICENSE.txt', 'JSDIFF-LICENSE.txt',
 ]);
 const asset = /^assets\/[a-zA-Z0-9_.-]+\.(?:js|css|png|webp|woff2?)$/;
 const download = /^downloads\/[a-zA-Z0-9_-][a-zA-Z0-9_.-]*\.(?:zip|exe|AppImage|dmg|txt)$/;

@@ -2,7 +2,7 @@
 
 ## Web and PWA
 
-Use Node.js 22 and npm.
+Use Node.js (version in `.nvmrc`) and npm.
 
 ```sh
 npm ci

@@ -242,11 +242,12 @@ test('staged Downloads point to packages matching the displayed checksums', asyn
 });
 
 test('update check only reads the public GitHub release and compares versions locally', async ({ page, context }) => {
+  let releaseTag = 'v1.0.0';
   const requests: { url: string; credentials: string | null; body: string | null }[] = [];
   await context.route('https://api.github.com/repos/torintran/torin-tools/releases/latest', async (route) => {
     const request = route.request();
     requests.push({ url: request.url(), credentials: await request.headerValue('x-api-key'), body: request.postData() });
-    await route.fulfill({ json: { tag_name: 'v1.0.0' } });
+    await route.fulfill({ json: { tag_name: releaseTag } });
   });
   await page.goto('/#downloads');
   await expect(page.getByRole('link', { name: 'Download installer on GitHub' }))
@@ -254,10 +255,16 @@ test('update check only reads the public GitHub release and compares versions lo
   expect(requests).toHaveLength(0);
   await page.getByRole('button', { name: 'Check for updates' }).click();
   await expect(page.getByText('Version 1.0.0 is available.', { exact: false })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Download v1.0.0' }))
+    .toHaveAttribute('href', 'https://github.com/torintran/torin-tools/releases/tag/v1.0.0');
   expect(requests).toHaveLength(1);
   expect(new URL(requests[0].url).search).toBe('');
   expect(requests[0].credentials).toBeNull();
   expect(requests[0].body).toBeNull();
+  releaseTag = 'v0.0.0';
+  await page.getByRole('button', { name: 'Check for updates' }).click();
+  await expect(page.getByRole('link', { name: /^Download v/ })).toHaveCount(0);
+  await expect(page.getByText('This version is up to date.')).toBeVisible();
 });
 
 test('the optional gateway requires an explicit connection choice', async ({ page, context }) => {

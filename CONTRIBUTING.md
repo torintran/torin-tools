@@ -4,7 +4,7 @@ Use GitHub Issues for bugs and feature requests. Search for an existing issue fi
 
 ## Set up and verify
 
-Use Node.js 22 and npm.
+Use Node.js (version in `.nvmrc`) and npm.
 
 ```sh
 npm ci

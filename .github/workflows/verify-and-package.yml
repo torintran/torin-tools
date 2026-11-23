@@ -12,10 +12,10 @@ jobs:
   web:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.1.0
         with:
-          node-version: '22'
+          node-version-file: '.nvmrc'
           cache: npm
       - run: npm ci
       - run: npm test
@@ -30,7 +30,7 @@ jobs:
           zip -qr "../artifacts/torin-web-${version}.zip" .
           cd ..
           node scripts/checksums.mjs artifacts
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7.0.2
         with:
           name: torin-web
           path: artifacts/
@@ -40,10 +40,10 @@ jobs:
     needs: web
     runs-on: windows-2022
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.1.0
         with:
-          node-version: '22'
+          node-version-file: '.nvmrc'
           cache: npm
       - run: rustup target add x86_64-pc-windows-msvc
       - run: npm ci
@@ -63,7 +63,7 @@ jobs:
           node scripts/smoke-windows.mjs test-results/portable/torin-tools.exe
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - run: node scripts/checksums.mjs artifacts
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7.0.2
         with:
           name: torin-windows-x64
           path: artifacts/

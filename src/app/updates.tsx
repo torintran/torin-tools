@@ -20,14 +20,15 @@ function isNewer(version: number[]) {
 
 export function Updates() {
   const t = useT();
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState<'current' | 'failed' | { version: string; href: string }>();
   const [checking, setChecking] = useState(false);
 
   async function check() {
     setChecking(true);
-    setStatus('');
+    setStatus(undefined);
     try {
       let result = isTauri() ? await invoke<{ version?: unknown } | null>('check_version') : null;
+      const fromGitHub = result === null;
       if (result === null) {
         const response = await fetch(latestReleaseApi, {
           credentials: 'omit', cache: 'no-store', redirect: 'error', referrerPolicy: 'no-referrer',
@@ -40,11 +41,13 @@ export function Updates() {
       }
       const latest = parseVersion(result.version);
       if (!latest) throw new Error('Invalid version manifest');
-      setStatus(isNewer(latest)
-        ? t('updates.available', { version: latest.join('.') })
-        : t('updates.currentOk'));
+      const version = latest.join('.');
+      setStatus(isNewer(latest) ? {
+        version,
+        href: fromGitHub ? `https://github.com/torintran/torin-tools/releases/tag/v${version}` : latestReleasePage,
+      } : 'current');
     } catch {
-      setStatus(t('updates.failed'));
+      setStatus('failed');
     } finally {
       setChecking(false);
     }
@@ -56,6 +59,12 @@ export function Updates() {
     <Button type="button" disabled={checking} onClick={() => void check()}>
       {checking ? t('updates.checking') : t('updates.check')}
     </Button>
-    {status && <p role="status">{status}</p>}
+    {status && <p role="status">{typeof status === 'object'
+      ? t('updates.available', { version: status.version })
+      : t(status === 'current' ? 'updates.currentOk' : 'updates.failed')}</p>}
+    {typeof status === 'object' &&
+      <Button component="a" href={status.href} target="_blank" rel="noopener noreferrer" variant="filled">
+        {t('updates.download', { version: status.version })}
+      </Button>}
   </Paper>;
 }
