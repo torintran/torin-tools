@@ -25,6 +25,6 @@ Gateway chỉ chuyển tiếp các GET Postman được liệt kê. API key, wor
 
 ## Thêm công cụ
 
-Vite tự phát hiện `src/tools/<id>/tool.ts` để đăng ký công cụ trong catalog và điều hướng. View được tải riêng khi mở công cụ. ID công cụ là một phần của hash route công khai và lịch sử cục bộ, nên giữ ổn định qua các lần cập nhật.
+Vite tự phát hiện `src/tools/<id>/tool.ts` để đăng ký công cụ trong catalog và điều hướng. View được tải riêng khi mở công cụ. ID công cụ là một phần của hash route công khai, nên giữ ổn định qua các lần cập nhật.
 
 [Quy chuẩn phát triển công cụ](tool-development.md) quy định cấu trúc thư mục, chọn tiêu chuẩn, lưu tham chiếu và kiểm tra. Xem [danh mục hồ sơ công cụ](tools/README.md) để tra đặc tả hiện hành và các mốc lưu nguồn.

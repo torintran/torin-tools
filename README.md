@@ -16,7 +16,7 @@ npm run build
 npm run serve
 ```
 
-Mở URL Vite khi phát triển hoặc http://localhost:4173 khi dùng bản build. Để triển khai, phục vụ `dist/` ở gốc origin HTTPS. Base64, JWT và lịch sử cục bộ dùng được offline sau khi service worker đã tải tài nguyên. Mục Downloads có hướng dẫn cài PWA và kiểm tra phiên bản.
+Mở URL Vite khi phát triển hoặc http://localhost:4173 khi dùng bản build. Để triển khai, phục vụ `dist/` ở gốc origin HTTPS. Base64 và JWT dùng được offline sau khi service worker đã tải tài nguyên. Mục Downloads có hướng dẫn cài PWA và kiểm tra phiên bản.
 
 ```sh
 npx playwright install chromium

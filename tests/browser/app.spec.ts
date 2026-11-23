@@ -193,41 +193,24 @@ test('backup announces API failure and exposes a retry with no ZIP', async ({ pa
   await expect(page.getByRole('button', { name: 'Try backup again' })).toBeEnabled();
 });
 
-test('opt-in history persists operation metadata only and can be cleared or disabled', async ({ page, context }) => {
+test('tool input stays out of storage and network after encode and decode', async ({ page, context }) => {
   const sensitive = 'synthetic-private-text';
   const requests: string[] = [];
   context.on('request', (request) => requests.push(request.url() + (request.postData() ?? '')));
-  const nav = page.getByRole('navigation');
-  await page.goto('/#history');
-  const toggle = page.getByRole('checkbox', { name: 'Save activity on this device' });
-  await expect(toggle).not.toBeChecked();
-  await toggle.check();
-
-  await nav.getByRole('link', { name: 'Base64', exact: true }).click();
+  await page.goto('/#base64');
   await page.getByRole('textbox', { name: 'Input', exact: true }).fill(sensitive);
   await page.getByRole('button', { name: 'Encode text' }).click();
   const output = await page.getByLabel('Output').inputValue();
-  await nav.getByRole('link', { name: 'JWT Decoder' }).click();
+  await page.goto('/#jwt');
   await page.getByLabel('Signed JWT').fill(jwt);
   await page.getByRole('button', { name: 'Decode JWT' }).click();
-  await nav.getByRole('link', { name: 'History' }).click();
-  await page.reload();
-  await expect(page.getByRole('link', { name: 'Encoded text' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Decoded a JWT' })).toBeVisible();
   const storage = await page.evaluate(() => ({ local: { ...localStorage }, session: { ...sessionStorage } }));
-  expect(Object.keys(storage.local)).toEqual(['torin.activity.v1']);
   expect(storage.session).toEqual({});
-  expect(JSON.parse(storage.local['torin.activity.v1']).map((entry: object) => Object.keys(entry).sort()))
-    .toEqual([['action', 'at', 'toolId'], ['action', 'at', 'toolId']]);
+  expect(storage.local['torin.activity.v1']).toBeUndefined();
   for (const value of [sensitive, output, jwt]) {
     expect(JSON.stringify(storage)).not.toContain(value);
     expect(requests.join('\n')).not.toContain(value);
   }
-  await page.getByRole('button', { name: 'Clear history' }).click();
-  await expect(page.getByText('No activity yet.')).toBeVisible();
-  await toggle.uncheck();
-  await expect(page.getByText('Local history is off.')).toBeVisible();
-  expect(await page.evaluate(() => localStorage.length)).toBe(0);
 });
 
 test('staged Downloads point to packages matching the displayed checksums', async ({ page }) => {

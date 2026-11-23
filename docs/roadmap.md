@@ -19,7 +19,7 @@ Cập nhật 23/11/2026. Đây là backlog nội bộ của Torin: công cụ đ
 ## Tiêu chí khi thêm tool
 
 - Đặc tả và archive nguồn theo [tool-development.md](tool-development.md).
-- Xử lý tại client mặc định; lịch sử opt-in chỉ ghi mã thao tác và thời điểm.
+- Xử lý tại client mặc định; không lưu input/kết quả vào storage.
 - Có ca hợp lệ, ca lỗi/biên và kiểm tra UI web; desktop khi liên quan file/clipboard/quyền.
 - Thư viện, font, từ điển và dataset bên thứ ba phải kiểm tra giấy phép trước khi đưa vào repo.
 

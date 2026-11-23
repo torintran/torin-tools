@@ -35,10 +35,10 @@ docs/tools/<id>/
     YYYY-MM-DD-<change>.md     # Nguồn và bằng chứng ở thời điểm thay đổi
 ```
 
-- Dùng ID chữ thường, bắt đầu bằng chữ cái, có thể chứa chữ số và dấu gạch ngang. ID phải duy nhất và ổn định vì được dùng trong URL và lịch sử. Giữ `tool.ts` và `view.tsx` ở cấp đầu của tool để cơ chế đăng ký và tải riêng hoạt động.
+- Dùng ID chữ thường, bắt đầu bằng chữ cái, có thể chứa chữ số và dấu gạch ngang. ID phải duy nhất và ổn định vì được dùng trong URL. Giữ `tool.ts` và `view.tsx` ở cấp đầu của tool để cơ chế đăng ký và tải riêng hoạt động.
 - Đặt nghiệp vụ trong module của tool, tách khỏi React. Chỉ đưa mã vào `src/shared/` khi nhiều tool thực sự dùng cùng hành vi. Tận dụng bộ kiểm thử trong `tests/` và `tests/browser/`.
 - Dùng theme Mantine và icon Lucide hiện có. Đặt chuỗi giao diện và tên action ở `src/i18n/messages/` cho các locale được hỗ trợ. Kiểm tra nhãn, bàn phím, trạng thái lỗi và màn hình nhỏ.
-- Xử lý tại client mặc định. Lịch sử chỉ nhận action ID cố định khi người dùng bật lưu lịch sử. Giữ input, tệp, token và kết quả ngoài lịch sử, log, analytics và cache. Tool có kết nối ngoài phải mô tả đích, trường được gửi, lý do và quyền cần thiết. Xem [quyền riêng tư và luồng dữ liệu](privacy.md).
+- Xử lý tại client mặc định. Giữ input, tệp, token và kết quả ngoài storage, log, analytics và cache. Tool có kết nối ngoài phải mô tả đích, trường được gửi, lý do và quyền cần thiết. Xem [quyền riêng tư và luồng dữ liệu](privacy.md).
 
 ## 4. Lưu nguồn ở thời điểm thêm hoặc sửa tool
 
