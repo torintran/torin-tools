@@ -38,6 +38,8 @@ docs/tools/<id>/
 - Dùng ID chữ thường, bắt đầu bằng chữ cái, có thể chứa chữ số và dấu gạch ngang. ID phải duy nhất và ổn định vì được dùng trong URL. Giữ `tool.ts` và `view.tsx` ở cấp đầu của tool để cơ chế đăng ký và tải riêng hoạt động.
 - Đặt nghiệp vụ trong module của tool, tách khỏi React. Chỉ đưa mã vào `src/shared/` khi nhiều tool thực sự dùng cùng hành vi. Tận dụng bộ kiểm thử trong `tests/` và `tests/browser/`.
 - Dùng theme Mantine và icon Lucide hiện có. Đặt chuỗi giao diện và tên action ở `src/i18n/messages/` cho các locale được hỗ trợ. Kiểm tra nhãn, bàn phím, trạng thái lỗi và màn hình nhỏ.
+- Với công cụ nhận tệp làm đầu vào, hỗ trợ kéo thả cùng nút chọn tệp. Áp dụng chung quy tắc kiểm tra và giới hạn cho cả hai cách nhập.
+- Với kết quả dạng văn bản phù hợp để hiển thị, ưu tiên xem trước chỉ đọc và sao chép theo thao tác người dùng. Giữ nút tải cho kết quả dạng tệp và giới hạn kích thước xem trước theo công cụ.
 - Xử lý tại client mặc định. Giữ input, tệp, token và kết quả ngoài storage, log, analytics và cache. Tool có kết nối ngoài phải mô tả đích, trường được gửi, lý do và quyền cần thiết. Xem [quyền riêng tư và luồng dữ liệu](privacy.md).
 
 ## 4. Lưu nguồn ở thời điểm thêm hoặc sửa tool

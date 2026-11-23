@@ -25,7 +25,7 @@ NIST ước tính RSA 2048 bit tương đương 112 bit an toàn và RSA 3072 bi
 | `request.csr` | Yêu cầu PKCS #10 dạng PEM chứa subject, khóa công khai, SAN và chữ ký. Gửi file này cho CA xin cấp chứng chỉ. |
 | `private-key.pem` | Khóa riêng PKCS #8 dạng PEM không mã hóa. Giữ file bí mật để dùng cùng chứng chỉ CA cấp. |
 
-Dữ liệu được xử lý trong bộ nhớ trên thiết bị. Web cần HTTPS hoặc localhost để tạo khóa. Bấm Clear, đổi đầu vào hoặc rời tool sẽ xóa kết quả khỏi giao diện. File đã tải xuống do hệ điều hành quản lý. [RFC 7468 §7](https://www.rfc-editor.org/rfc/rfc7468.html#section-7) · [§10](https://www.rfc-editor.org/rfc/rfc7468.html#section-10).
+CSR dạng PEM được hiển thị trực tiếp, có nút sao chép và tải xuống. Khóa riêng được cung cấp qua nút tải riêng. Dữ liệu được xử lý trong bộ nhớ trên thiết bị. Web cần HTTPS hoặc localhost để tạo khóa. Bấm Clear, đổi đầu vào hoặc rời tool sẽ xóa kết quả khỏi giao diện. File đã tải xuống do hệ điều hành quản lý. [RFC 7468 §7](https://www.rfc-editor.org/rfc/rfc7468.html#section-7) · [§10](https://www.rfc-editor.org/rfc/rfc7468.html#section-10) · [Clipboard API §7.3.4](https://www.w3.org/TR/clipboard-apis/#dom-clipboard-writetext).
 
 ## Kiểm tra trước khi gửi CA
 

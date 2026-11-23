@@ -23,6 +23,10 @@ Local-first developer utilities for the web and Windows, with an English and Vie
 
 Use **Ctrl+K** or **⌘K** to find a tool. Local tools work offline once the web app has cached their assets. Postman Backup requires network access and an API key. [Data handling and privacy](docs/privacy.md).
 
+## Cheat Sheets
+
+Use **Cheat Sheets** in the app for offline command examples with copy buttons and official references. [Docker, Kubernetes, and Git & GitHub](docs/cheat-sheets/README.md).
+
 ## Run it
 
 **Windows x64.** Get the installer or portable ZIP from [GitHub Releases](https://github.com/torintran/torin-tools/releases).

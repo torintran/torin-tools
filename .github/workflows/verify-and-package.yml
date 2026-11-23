@@ -68,3 +68,44 @@ jobs:
           name: torin-windows-x64
           path: artifacts/
           if-no-files-found: error
+
+  release:
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    needs: [web, windows]
+    runs-on: ubuntu-24.04
+    concurrency:
+      group: release-${{ github.ref }}
+    permissions:
+      actions: read
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - name: Collect verified packages
+        shell: bash
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          [[ "$GITHUB_REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ && "$GITHUB_REF_NAME" == "v$version" ]]
+          gh run download "$GITHUB_RUN_ID" --name torin-web --dir packages/web
+          gh run download "$GITHUB_RUN_ID" --name torin-windows-x64 --dir packages/windows
+          mkdir release-assets
+          cp "packages/web/torin-web-$version.zip" release-assets/
+          cp packages/windows/torin-tools-windows-x64-{setup.exe,portable.zip} release-assets/
+          node scripts/checksums.mjs release-assets
+      - name: Publish GitHub Release
+        shell: bash
+        run: |
+          tag="$GITHUB_REF_NAME"
+          if state=$(gh release view "$tag" --json isDraft --jq .isDraft); then
+            if [[ "$state" == false ]]; then
+              echo "Release $tag is already published."
+              exit 0
+            fi
+          else
+            gh release create "$tag" --verify-tag --draft --generate-notes --title "Torin Tools $tag"
+          fi
+          gh release upload "$tag" release-assets/* --clobber
+          gh release edit "$tag" --draft=false --latest

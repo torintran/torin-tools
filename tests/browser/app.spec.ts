@@ -6,6 +6,16 @@ const id = '12345678-1234-1234-1234-123456789abc';
 const key = 'synthetic-browser-key';
 const jwt = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzeW50aGV0aWMtdG9rZW4ifQ.YQ';
 
+async function mockClipboard(page: Page) {
+  await page.addInitScript(() => {
+    let text = '';
+    Object.defineProperty(navigator, 'clipboard', { value: {
+      writeText: async (value: string) => { text = value; },
+      readText: async () => text,
+    } });
+  });
+}
+
 async function openMobileMenu(page: Page) {
   const menu = page.getByRole('button', { name: 'Menu', exact: true });
   if (await menu.isVisible()) await menu.click();
@@ -24,7 +34,11 @@ test('local tools work offline, with balanced viewport and no stored token', asy
   await page.goto('/');
   const catalog = page.getByRole('main');
   await expect(catalog.getByRole('heading', { name: 'All tools' })).toBeVisible();
-  await catalog.getByRole('searchbox').fill('UTF-8');
+  const search = catalog.getByRole('searchbox', { name: 'Find a tool' });
+  await expect(page.getByRole('combobox', { name: 'Quick search' })).toHaveCount(0);
+  await page.keyboard.press('Control+k');
+  await expect(search).toBeFocused();
+  await search.fill('UTF-8');
   await expect(catalog.getByRole('link', { name: /Base64/ })).toBeVisible();
   await expect(catalog.getByRole('link', { name: /JWT Decoder/ })).toHaveCount(0);
   await catalog.getByRole('link', { name: /Base64/ }).click();
@@ -70,6 +84,7 @@ test('local tools work offline, with balanced viewport and no stored token', asy
 });
 
 test('Base64 live text and binary file conversion work offline', async ({ page, context }) => {
+  await mockClipboard(page);
   await page.goto('/#base64');
   await page.evaluate(async () => {
     await navigator.serviceWorker.ready;
@@ -90,6 +105,12 @@ test('Base64 live text and binary file conversion work offline', async ({ page, 
   const mimeType = 'application/octet-stream';
   await file.setInputFiles({ name: 'example.bin', mimeType, buffer: bytes });
   await page.getByRole('button', { name: 'Encode file' }).click();
+  const preview = page.getByRole('textbox', { name: 'Text preview' });
+  await expect(preview).toHaveValue(bytes.toString('base64'));
+  const copy = page.getByRole('button', { name: 'Copy output' });
+  await copy.click();
+  await expect(page.getByText('Copied to clipboard.')).toBeVisible();
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(bytes.toString('base64'));
   const encodedDownload = page.waitForEvent('download');
   await page.getByRole('link', { name: 'Download result' }).click();
   const encoded = [];
@@ -98,13 +119,59 @@ test('Base64 live text and binary file conversion work offline', async ({ page, 
   expect(encodedBytes.toString()).toBe(bytes.toString('base64'));
 
   await page.getByRole('button', { name: 'Decode', exact: true }).click();
-  await file.setInputFiles({ name: 'example.base64', mimeType: 'text/plain', buffer: encodedBytes });
+  const dropArea = page.locator('.file-drop');
+  const dataTransfer = await page.evaluateHandle((contents) => {
+    const transfer = new DataTransfer();
+    transfer.items.add(new File([contents], 'example.base64', { type: 'text/plain' }));
+    transfer.items.add(new File([contents], 'extra.base64', { type: 'text/plain' }));
+    return transfer;
+  }, encodedBytes.toString());
+  await dropArea.dispatchEvent('dragover', { dataTransfer });
+  await expect(dropArea).toHaveAttribute('data-dragging', 'true');
+  await dropArea.dispatchEvent('drop', { dataTransfer });
+  await expect(page.getByText('Drop one file at a time.')).toBeVisible();
+  await expect(dropArea).not.toHaveAttribute('data-dragging', 'true');
+  await dataTransfer.evaluate((transfer) => transfer.items.remove(1));
+  await dropArea.dispatchEvent('drop', { dataTransfer });
+  await dataTransfer.dispose();
+  await expect(file).toHaveValue('');
+  await expect(page.getByRole('button', { name: 'File to convert' })).toHaveText('example.base64');
+  await expect(page.getByText('Drop one file at a time.')).toHaveCount(0);
   await page.getByRole('button', { name: 'Decode file' }).click();
+  await expect(page.getByRole('link', { name: 'Download result' })).toBeVisible();
+  await expect(preview).toHaveCount(0);
+  await expect(copy).toHaveCount(0);
   const decodedDownload = page.waitForEvent('download');
   await page.getByRole('link', { name: 'Download result' }).click();
   const decoded = [];
   for await (const chunk of await (await decodedDownload).createReadStream()) decoded.push(chunk as Buffer);
   expect(Buffer.concat(decoded)).toEqual(bytes);
+
+  await file.setInputFiles({ name: 'text.base64', mimeType: 'text/plain', buffer: Buffer.from(Buffer.from('Tiếng Việt').toString('base64')) });
+  await page.getByRole('button', { name: 'Decode file' }).click();
+  await expect(preview).toHaveValue('Tiếng Việt');
+  await expect(page.getByRole('link', { name: 'Download result' })).toBeVisible();
+
+  await page.getByRole('button', { name: 'Encode', exact: true }).click();
+  await file.setInputFiles({ name: 'large.txt', mimeType: 'text/plain', buffer: Buffer.alloc(64 * 1024, 'a') });
+  await page.getByRole('button', { name: 'Encode file' }).click();
+  await expect(page.getByRole('link', { name: 'Download result' })).toHaveAttribute('download', 'large.txt.base64');
+  await expect(preview).toHaveCount(0);
+});
+
+test('CSR PEM can be copied and downloaded alongside the private key', async ({ page }) => {
+  await mockClipboard(page);
+  await page.goto('/#csr');
+  await page.getByRole('textbox', { name: 'Common name (DNS)' }).fill('tools.example.com');
+  await page.getByRole('button', { name: 'Generate CSR' }).click();
+  const preview = page.getByRole('textbox', { name: 'Certificate signing request (PEM)' });
+  await expect(preview).toHaveValue(/-----BEGIN CERTIFICATE REQUEST-----/);
+  await page.getByRole('button', { name: 'Copy CSR' }).click();
+  await expect(page.getByText('Copied to clipboard.')).toBeVisible();
+  const copied = await page.evaluate(() => navigator.clipboard.readText());
+  expect(copied.replace(/\r\n/g, '\n')).toBe(await preview.inputValue());
+  await expect(page.getByRole('link', { name: 'Download CSR' })).toHaveAttribute('download', 'request.csr');
+  await expect(page.getByRole('link', { name: 'Download private key' })).toHaveAttribute('download', 'private-key.pem');
 });
 
 test('JWT signs and verifies locally while distinguishing signature state from claims', async ({ page, context }) => {
@@ -313,12 +380,55 @@ test('language switch persists only after an explicit choice and About hides emp
 });
 
 test('quick search jumps to a tool from the header or mobile menu', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/#downloads');
   await openMobileMenu(page);
-  const search = page.getByRole('combobox', { name: 'Quick search tools' });
+  const search = page.getByRole('combobox', { name: 'Quick search' });
   await search.fill('jwt');
   await expect(page.getByRole('option', { name: /JWT Decoder/ })).toBeVisible();
   await page.getByRole('option', { name: /JWT Decoder/ }).click();
   await expect(page).toHaveURL(/#jwt$/);
   await expect(page.getByRole('heading', { name: 'JWT Decoder' })).toBeVisible();
+});
+
+test('cheat sheets support offline navigation, quick search, references and copying', async ({ page, context }) => {
+  await mockClipboard(page);
+  await page.goto('/');
+  await openMobileMenu(page);
+  await page.getByRole('link', { name: 'Cheat Sheets', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Cheat Sheets' })).toBeVisible();
+  await page.evaluate(async () => {
+    await navigator.serviceWorker.ready;
+    if (!navigator.serviceWorker.controller) {
+      await new Promise<void>((resolve) => navigator.serviceWorker.addEventListener('controllerchange', () => resolve(), { once: true }));
+    }
+  });
+  await context.setOffline(true);
+  await page.reload();
+  const sheetNav = page.getByRole('navigation', { name: 'Cheat Sheets' });
+  const build = page.getByRole('listitem').filter({ hasText: 'docker build -t my-app:1.0.0 .' });
+  await build.locator('.cheat-code').getByRole('button', { name: 'Copy' }).click();
+  await expect(build.getByText('Copied to clipboard.')).toBeVisible();
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('docker build -t my-app:1.0.0 .');
+  await expect(build.getByRole('link', { name: 'Reference' })).toHaveAttribute('href', /docs\.docker\.com.*image\/build/);
+
+  await sheetNav.getByRole('link', { name: 'Git & GitHub' }).click();
+  await expect(page).toHaveURL(/#cheat-sheets\/git-github$/);
+  await expect(page.getByText('gh pr checks 123', { exact: true })).toBeVisible();
+
+  await openMobileMenu(page);
+  await page.getByRole('combobox', { name: 'Quick search' }).fill('kubectl rollout');
+  await page.getByRole('option', { name: /Kubernetes/ }).click();
+  await expect(page).toHaveURL(/#cheat-sheets\/kubernetes$/);
+  await expect(page.getByText('sudo k3s kubectl -n apps get pods', { exact: true })).toBeVisible();
+  const longCommand = page.locator('.cheat-code').filter({ hasText: 'kubectl -n apps set image' });
+  const [code, copy] = await Promise.all([
+    longCommand.locator('pre').boundingBox(),
+    longCommand.getByRole('button', { name: 'Copy' }).boundingBox(),
+  ]);
+  const viewport = page.viewportSize();
+  if (!code || !copy || !viewport) throw new Error('Missing command, copy button, or viewport bounds');
+  expect(code.x + code.width).toBeLessThan(copy.x);
+  expect(copy.x + copy.width).toBeLessThanOrEqual(viewport.width);
+  await page.getByRole('button', { name: 'VI', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Triển khai và xác minh' })).toBeVisible();
 });

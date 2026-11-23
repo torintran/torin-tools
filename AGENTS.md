@@ -9,3 +9,7 @@ Co-authored-by: Codex <codex@openai.com>
 # Thêm hoặc sửa công cụ
 
 Áp dụng [quy chuẩn phát triển công cụ](docs/tool-development.md) khi thêm tool hoặc thay đổi thuật toán, định dạng, API hay luồng dữ liệu của tool. Đặt mã trong `src/tools/<id>/`, đặc tả trong `docs/tools/<id>/spec.md` và bản ghi tham chiếu theo ngày trong `docs/tools/<id>/archive/`. Cập nhật mã, tài liệu và bằng chứng kiểm tra trong cùng thay đổi. Dùng Mantine, Lucide và hệ thống dịch hiện có.
+
+# Thêm hoặc sửa Cheat Sheets
+
+Áp dụng [quy chuẩn phát triển Cheat Sheets](docs/cheat-sheet-development.md). Lưu nội dung tại `src/cheat-sheets/<id>.ts`, đặc tả và nguồn theo ngày tại `docs/cheat-sheets/<id>/`. Đối chiếu từng câu lệnh với tài liệu chính thức, giải thích Anh/Việt, kiểm tra ví dụ và cập nhật hồ sơ khi đổi nội dung.

@@ -1,7 +1,8 @@
 import { TextInput, ThemeIcon } from '@mantine/core';
-import { Search } from 'lucide-react';
+import { BookOpen, Search } from 'lucide-react';
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useT } from '../i18n/context.tsx';
+import { cheatSheetRoute, cheatSheets } from '../cheat-sheets/index.ts';
 import { matchTools } from './catalog.tsx';
 
 function shortcutLabel() {
@@ -17,7 +18,18 @@ export function QuickSearch() {
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
-  const results = useMemo(() => matchTools(query, t).slice(0, 8), [query, t]);
+  const results = useMemo(() => {
+    const term = query.trim().toLowerCase();
+    const words = term.split(/\s+/);
+    const matches = (text: string) => words.every((word) => text.toLowerCase().includes(word));
+    const sheets = term ? cheatSheets.filter(({ name, keywords, groups }) =>
+      matches([name, ...keywords].join(' ')) ||
+      groups.some(({ commands }) => commands.some(([, , example]) => matches(example))),
+    ).map(({ id, name }) => ({ id: cheatSheetRoute(id), name, group: t('app.nav.cheatSheets'), icon: BookOpen })) : [];
+    const tools = matchTools(query, t).map(({ id, nameKey, groupKey, icon }) =>
+      ({ id, name: t(nameKey), group: t(groupKey), icon }));
+    return [...tools, ...sheets].slice(0, 8);
+  }, [query, t]);
   const showList = open && (query.trim().length > 0 || results.length > 0);
 
   useEffect(() => {
@@ -88,8 +100,8 @@ export function QuickSearch() {
               onClick={(event) => { event.preventDefault(); go(tool.id); }}>
               <ThemeIcon size={34} variant="light"><Icon size={18} aria-hidden="true" /></ThemeIcon>
               <span>
-                <strong>{t(tool.nameKey)}</strong>
-                <small>{t(tool.groupKey)}</small>
+                <strong>{tool.name}</strong>
+                <small>{tool.group}</small>
               </span>
             </a>
           </li>;

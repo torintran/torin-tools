@@ -1,5 +1,6 @@
-import { lazy, useState } from 'react';
+import { lazy, useRef, useState } from 'react';
 import { Badge, Card, TextInput, ThemeIcon } from '@mantine/core';
+import { useHotkeys } from '@mantine/hooks';
 import { ArrowUpRight, Search } from 'lucide-react';
 import { useT } from '../i18n/context.tsx';
 import type { MessageKey } from '../i18n/messages/en.ts';
@@ -10,7 +11,7 @@ const groupOrder: MessageKey[] = [
   'groups.encoding', 'groups.converters', 'groups.text', 'groups.tokens', 'groups.generators', 'groups.api',
 ];
 const definitions = import.meta.glob<ToolDefinition>('../tools/*/tool.ts', { eager: true, import: 'default' });
-const reservedIds = new Set(['tools', 'history', 'downloads', 'about']);
+const reservedIds = new Set(['tools', 'history', 'downloads', 'about', 'cheat-sheets']);
 export const tools = Object.values(definitions).map((definition) => {
   if (!/^[a-z][a-z0-9-]*$/.test(definition.id) || reservedIds.has(definition.id)) {
     throw new Error('Invalid or duplicate tool ID: ' + definition.id);
@@ -32,13 +33,16 @@ export function matchTools(query: string, t: Translate) {
       .join(' ').toLowerCase().includes(q));
 }
 
-export function Catalog() {
+export function Catalog({ shortcutEnabled }: { shortcutEnabled: boolean }) {
   const t = useT();
+  const searchInput = useRef<HTMLInputElement>(null);
   const [search, setSearch] = useState('');
   const results = matchTools(search, t);
 
+  useHotkeys(shortcutEnabled ? [['mod+k', () => searchInput.current?.focus()]] : [], []);
+
   return <>
-    <TextInput className="catalog-search" label={t('catalog.search')} type="search"
+    <TextInput ref={searchInput} className="catalog-search" label={t('catalog.search')} type="search"
       leftSection={<Search size={18} aria-hidden="true" />}
       autoComplete="off" spellCheck={false} placeholder={t('catalog.placeholder')} maxLength={150}
       value={search} onChange={(event) => setSearch(event.target.value)} />

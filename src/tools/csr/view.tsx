@@ -1,7 +1,8 @@
-import { Alert, Button, Paper, Select, Textarea, TextInput } from '@mantine/core';
+import { Alert, Button, Paper, Select, TextInput } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import type { ToolViewProps } from '../../app/tool.ts';
 import { useT } from '../../i18n/context.tsx';
+import { TextResultPreview } from '../../shared/text-result-preview.tsx';
 import { dnsName, generateCsr, rsaKeySizes, subjectFields, type RsaKeySize, type Subject } from './generate.ts';
 
 export default function CsrGenerator({ recordActivity }: ToolViewProps) {
@@ -86,10 +87,11 @@ export default function CsrGenerator({ recordActivity }: ToolViewProps) {
         <Button type="button" disabled={busy} onClick={() => { setSubject({}); setSan(''); setBits(rsaKeySizes[0]); clearResult(); }}>{t('common.clear')}</Button>
       </div>
       {result && files && <>
-        <Textarea label={t('csr.result')} value={result.csr} readOnly spellCheck={false} />
-        <Alert role="note" color="yellow">{t('csr.keyNote')}</Alert>
-        <div className="actions">
+        <TextResultPreview label={t('csr.result')} value={result.csr} copyLabel={t('csr.copy')}>
           <Button component="a" href={files.csr} download="request.csr">{t('csr.download')}</Button>
+        </TextResultPreview>
+        <Alert role="note" color="yellow">{t('csr.keyNote')}</Alert>
+        <div>
           <Button component="a" href={files.key} download="private-key.pem">{t('csr.downloadKey')}</Button>
         </div>
       </>}

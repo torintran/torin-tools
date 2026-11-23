@@ -13,14 +13,14 @@ function coffeeHref() {
   return { href: '#about', external: false };
 }
 
-export function AppChrome() {
+export function AppChrome({ showQuickSearch }: { showQuickSearch: boolean }) {
   const t = useT();
   const { locale, setLocale } = useLocale();
   const social = socialLinks();
   const coffee = hasDonate() ? coffeeHref() : undefined;
 
   return <div className="app-chrome">
-    <QuickSearch />
+    {showQuickSearch && <QuickSearch />}
     <div className="app-chrome-actions">
       <div className="lang-switch" role="group" aria-label={t('app.lang')}>
         {(['en', 'vi'] as const).map((code: Locale) => <Button key={code} type="button" size="compact-sm"

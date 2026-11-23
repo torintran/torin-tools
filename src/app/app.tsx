@@ -1,7 +1,9 @@
 import { Suspense, useEffect, useMemo, useState } from 'react';
 import { Alert, Button, Drawer, NavLink } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { Coffee, Download, Info, LayoutGrid, Menu, Send, type LucideIcon } from 'lucide-react';
+import { BookOpen, Coffee, Download, Info, LayoutGrid, Menu, Send, type LucideIcon } from 'lucide-react';
+import { cheatSheetForRoute, cheatSheets, cheatSheetsRoute } from '../cheat-sheets/index.ts';
+import { CheatSheets } from '../cheat-sheets/view.tsx';
 import { useLocale, useT, type Locale } from '../i18n/context.tsx';
 import type { MessageKey } from '../i18n/messages/en.ts';
 import { About } from './about.tsx';
@@ -16,6 +18,7 @@ type InstallEvent = Event & { prompt: () => Promise<void> };
 
 const appPageMeta = {
   tools: { nameKey: 'app.nav.tools', icon: LayoutGrid, descriptionKey: 'app.nav.toolsDesc' },
+  'cheat-sheets': { nameKey: 'app.nav.cheatSheets', icon: BookOpen, descriptionKey: 'app.nav.cheatSheetsDesc' },
   downloads: { nameKey: 'app.nav.downloads', icon: Download, descriptionKey: 'app.nav.downloadsDesc' },
   about: { nameKey: 'app.nav.about', icon: Info, descriptionKey: 'app.nav.aboutDesc' },
 } as const satisfies Record<string, { nameKey: MessageKey; icon: LucideIcon; descriptionKey: MessageKey }>;
@@ -23,7 +26,7 @@ const appPageMeta = {
 function currentPage(): string {
   const id = location.hash.slice(1);
   if (id === 'history') return 'tools';
-  return toolsById.has(id) || Object.hasOwn(appPageMeta, id) ? id : 'tools';
+  return toolsById.has(id) || Object.hasOwn(appPageMeta, id) || cheatSheetForRoute(id) ? id : 'tools';
 }
 
 function coffeeHref() {
@@ -42,6 +45,7 @@ export function App() {
   const [openedGroups, setOpenedGroups] = useState<Record<string, boolean>>({});
   const [menuOpen, setMenuOpen] = useState(false);
   const isMobile = useMediaQuery('(max-width: 760px)') === true;
+  const isCatalog = selected === 'tools';
 
   useEffect(() => {
     const change = () => {
@@ -49,17 +53,27 @@ export function App() {
       setMenuOpen(false);
     };
     const available = (event: Event) => { event.preventDefault(); setInstall(event as InstallEvent); };
+    const blockFileNavigation = (event: DragEvent) => {
+      if (event.defaultPrevented || !event.dataTransfer?.types.includes('Files')) return;
+      event.preventDefault();
+      if (event.type === 'dragover') event.dataTransfer.dropEffect = 'none';
+    };
     window.addEventListener('hashchange', change);
     window.addEventListener('beforeinstallprompt', available);
+    window.addEventListener('dragover', blockFileNavigation);
+    window.addEventListener('drop', blockFileNavigation);
     return () => {
       window.removeEventListener('hashchange', change);
       window.removeEventListener('beforeinstallprompt', available);
+      window.removeEventListener('dragover', blockFileNavigation);
+      window.removeEventListener('drop', blockFileNavigation);
     };
   }, []);
 
   const tool = toolsById.get(selected);
+  const cheatSheet = selected === cheatSheetsRoute ? cheatSheets[0] : cheatSheetForRoute(selected);
   const activeGroupKey = tool?.groupKey;
-  const pageMeta = tool ? undefined : appPageMeta[selected as keyof typeof appPageMeta];
+  const pageMeta = tool ? undefined : appPageMeta[(cheatSheet ? cheatSheetsRoute : selected) as keyof typeof appPageMeta];
   const pageName = tool ? t(tool.nameKey) : pageMeta ? t(pageMeta.nameKey) : t('app.nav.tools');
   const pageDescription = tool ? t(tool.descriptionKey) : pageMeta ? t(pageMeta.descriptionKey) : '';
   const social = socialLinks();
@@ -83,8 +97,9 @@ export function App() {
   }, [isMobile]);
 
   function navLink(id: string, name: string, Icon: LucideIcon) {
-    return <NavLink key={id} href={'#' + id} active={selected === id}
-      aria-current={selected === id ? 'page' : undefined} label={name}
+    const active = selected === id || (id === cheatSheetsRoute && Boolean(cheatSheet));
+    return <NavLink key={id} href={'#' + id} active={active}
+      aria-current={active ? 'page' : undefined} label={name}
       leftSection={<Icon className="nav-icon" size={18} aria-hidden="true" />}
       onClick={() => setMenuOpen(false)} />;
   }
@@ -104,6 +119,7 @@ export function App() {
         </NavLink>
       </div>)}
       <div className="nav-group support-links">
+        {navLink(cheatSheetsRoute, t('app.nav.cheatSheets'), appPageMeta[cheatSheetsRoute].icon)}
         {navLink('downloads', t('app.nav.downloads'), appPageMeta.downloads.icon)}
       </div>
     </>;
@@ -140,13 +156,14 @@ export function App() {
             </Button>)}
           </div>
         </div>
-        <div className="desktop-chrome"><AppChrome /></div>
+        <div className="desktop-chrome"><AppChrome showQuickSearch={!isCatalog && !isMobile} /></div>
         <header>
           {tool && <p className="breadcrumb"><a href="#tools">{t('app.breadcrumb.tools')}</a><span aria-hidden="true"> / </span>{t(tool.groupKey)}</p>}
           <h1>{pageName}</h1>
           <p>{pageDescription}</p>
         </header>
-        {selected === 'tools' && <Catalog />}
+        {isCatalog && <Catalog shortcutEnabled={!menuOpen} />}
+        {cheatSheet && <CheatSheets key={cheatSheet.id} sheet={cheatSheet} />}
         {selected === 'downloads' && <Downloads install={Boolean(install)} installApp={() => {
           void install?.prompt();
           setInstall(undefined);
@@ -165,7 +182,7 @@ export function App() {
     <Drawer id="mobile-nav" className="mobile-drawer" opened={menuOpen} onClose={() => setMenuOpen(false)}
       position="left" size={320} title={t('app.nav.menu')} padding="md"
       zIndex={400}>
-      <div className="drawer-search"><QuickSearch /></div>
+      {!isCatalog && <div className="drawer-search"><QuickSearch /></div>}
       <nav className="drawer-nav" aria-label={t('app.nav.aria')}>{toolNav()}</nav>
       <div className="drawer-actions">
         {social.map(({ id, url }) => {

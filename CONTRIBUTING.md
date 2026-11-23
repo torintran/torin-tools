@@ -26,6 +26,7 @@ Browser checks use the production build and fixtures. To use an existing Chrome 
 
 1. Fork the repository and make your change on a branch.
 2. For a new tool or a change to an algorithm, data format, API contract, or data flow, include the current specification and a dated source archive. Follow the [tool development rules](docs/tool-development.md).
+   For a new or updated cheat sheet, follow the [cheat sheet development rules](docs/cheat-sheet-development.md) and archive the official references.
 3. Reuse the Mantine theme, Lucide icons, and English/Vietnamese message catalogs. For UI changes, include a screenshot or describe what you checked at desktop and mobile widths.
 4. Describe the change, link related issues, and list the checks you ran. Keep real tokens, keys, personal data, and build artifacts out of the pull request.
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.0
+
+- Added offline Docker, Kubernetes and Git & GitHub cheat sheets with English and Vietnamese explanations, command copy buttons and official references.
+- Added file drag and drop to Base64, including Windows WebView2 configuration. Small UTF-8 results can be previewed and copied, and all conversions remain downloadable.
+- Added a copy button for the CSR PEM alongside its download.
+- Simplified search on All tools to a single catalog field and kept quick navigation on other pages.
+- GitHub Actions now publishes the tagged web ZIP, Windows installer and portable package with checksums to GitHub Releases.
+
 ## 0.3.0
 
 - Added URL encoding, date-time conversion, JSON and JSONC formatting, whitespace removal, and UUID generation.

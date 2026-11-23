@@ -27,7 +27,7 @@ npm ci
 npm run tauri -- build --target x86_64-pc-windows-msvc --bundles nsis -- --locked
 ```
 
-Output is under `src-tauri/target/x86_64-pc-windows-msvc/release/`. The NSIS installer is under `bundle/nsis/`; the portable executable needs WebView2. The [CI workflow](../.github/workflows/verify-and-package.yml) builds both Windows packages and the web ZIP.
+Output is under `src-tauri/target/x86_64-pc-windows-msvc/release/`. The NSIS installer is under `bundle/nsis/`; the portable executable needs WebView2. The [CI workflow](../.github/workflows/verify-and-package.yml) builds both Windows packages and the web ZIP. A version tag publishes those three packages and a combined `SHA256SUMS.txt` to [GitHub Releases](https://github.com/torintran/torin-tools/releases/latest) after the build and verification jobs pass.
 
 To host packages in the app's Downloads page, place them under `dist/downloads/` after the web build and run `node scripts/checksums.mjs dist/downloads --portal`. For Docker, mount that directory and its generated `downloads.json` read-only as shown in [docker-compose.yml](../docker-compose.yml).
 
