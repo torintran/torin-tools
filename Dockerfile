@@ -15,7 +15,7 @@ FROM node:22-bookworm-slim AS runtime
 WORKDIR /app
 ENV NODE_ENV=production \
     PORT=4173 \
-    TORIN_LISTEN=0.0.0.0
+    LISTEN_HOST=0.0.0.0
 
 COPY --from=build /app/dist/ ./dist/
 COPY --from=build /app/dist-server/server.js ./server.mjs

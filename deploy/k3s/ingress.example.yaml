@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: torin-tools
+  namespace: torin-tools
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - tools.home.arpa
+      secretName: torin-tools-tls
+  rules:
+    - host: tools.home.arpa
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: torin-tools
+                port:
+                  name: http

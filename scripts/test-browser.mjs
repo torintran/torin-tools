@@ -3,7 +3,7 @@ import { once } from 'node:events';
 import { fileURLToPath } from 'node:url';
 
 const server = spawn(process.execPath, ['--import', 'tsx', 'server/server.ts'], {
-  env: { ...process.env, PORT: '0', TORIN_LISTEN: '127.0.0.1', TORIN_GATEWAY: '0' },
+  env: { ...process.env, PORT: '0', LISTEN_HOST: '127.0.0.1', POSTMAN_GATEWAY_ENABLED: '0' },
   stdio: ['ignore', 'pipe', 'inherit'],
 });
 
@@ -22,7 +22,7 @@ try {
   });
   const cli = fileURLToPath(new URL('../node_modules/@playwright/test/cli.js', import.meta.url));
   const playwright = spawn(process.execPath, [cli, 'test', ...process.argv.slice(2)], {
-    env: { ...process.env, TORIN_TEST_URL: url },
+    env: { ...process.env, PLAYWRIGHT_BASE_URL: url },
     stdio: 'inherit',
   });
   const [code] = await once(playwright, 'exit');

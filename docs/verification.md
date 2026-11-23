@@ -20,7 +20,7 @@ Kiểm tra ngày 23/11/2026 trên Windows x64. Backup và phiên bản cao hơn 
 | Windows portable | Build và chạy từ ZIP bằng WebView2 trên máy hiện tại. Smoke test qua Base64, native IPC route guard và trạng thái kiểm tra phiên bản khi chưa cấu hình URL. Vẫn bỏ qua hộp thoại lưu ZIP theo yêu cầu. |
 | Windows NSIS | Đã build. Installer chưa ký và chưa chạy thử cài đặt. |
 | Postman thật | Bản trước đã đọc được 401/403 khi thử CORS với key giả. Chưa thử backup tài khoản thật hoặc luồng relay với key thật. |
-| Cập nhật Windows từ xa | Bản local chưa có TORIN_UPDATE_URL. Luồng đọc một manifest mới đã kiểm tra trên web với response giả lập. |
+| Cập nhật Windows từ xa | Bản local chưa có UPDATE_MANIFEST_URL. Luồng đọc một manifest mới đã kiểm tra trên web với response giả lập. |
 | npm | npm audit trả về 0 lỗ hổng đã biết tại thời điểm chạy. |
 | Phạm vi khác | macOS và Linux dời sang đợt sau. Chưa cài PWA trên điện thoại thật hoặc chạy portable trên Windows sạch thiếu WebView2. |
 
@@ -28,4 +28,4 @@ Kiểm tra ngày 23/11/2026 trên Windows x64. Backup và phiên bản cao hơn 
 
 artifacts/v0.2.0/ gồm web ZIP, Windows portable ZIP, Windows installer và SHA256SUMS.txt. Web ZIP chứa website tĩnh. Bản local trong dist/ đã nạp file desktop vào Downloads.
 
-Chạy lại bằng npm test, npm run build và npm run test:browser. Đặt TORIN_CHECK_DOWNLOADS=1 sau khi đưa file thực vào dist/downloads/ để kiểm tra checksum qua HTTP. Script node scripts/smoke-windows.mjs <exe> kiểm tra Windows bằng profile WebView2 tạm.
+Chạy lại bằng npm test, npm run build và npm run test:browser. Đặt PLAYWRIGHT_CHECK_DOWNLOADS=1 sau khi đưa file thực vào dist/downloads/ để kiểm tra checksum qua HTTP. Script node scripts/smoke-windows.mjs <exe> kiểm tra Windows bằng profile WebView2 tạm.

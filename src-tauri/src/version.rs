@@ -10,7 +10,7 @@ pub struct VersionManifest {
 #[tauri::command]
 pub async fn check_version() -> Result<Option<VersionManifest>, &'static str> {
     const ERROR: &str = "Could not check for updates.";
-    let Some(configured) = option_env!("TORIN_UPDATE_URL").filter(|value| !value.is_empty()) else {
+    let Some(configured) = option_env!("UPDATE_MANIFEST_URL").filter(|value| !value.is_empty()) else {
         return Ok(None);
     };
     let url = Url::parse(configured).map_err(|_| ERROR)?;

@@ -5,13 +5,13 @@ export default defineConfig({
   fullyParallel: true,
   workers: 2,
   use: {
-    baseURL: process.env.TORIN_TEST_URL ?? 'http://localhost:4173',
+    baseURL: process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:4173',
     launchOptions: { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE },
   },
   projects: [
     { name: 'desktop', use: { ...devices['Desktop Chrome'] } },
     { name: 'mobile-viewport', use: { ...devices['Pixel 7'] } },
   ],
-  webServer: process.env.TORIN_TEST_URL ? undefined :
+  webServer: process.env.PLAYWRIGHT_BASE_URL ? undefined :
     { command: 'npm run serve', url: 'http://localhost:4173', reuseExistingServer: false },
 });

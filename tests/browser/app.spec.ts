@@ -228,7 +228,7 @@ test('tool input stays out of storage and network after encode and decode', asyn
 });
 
 test('staged Downloads point to packages matching the displayed checksums', async ({ page }) => {
-  test.skip(process.env.TORIN_CHECK_DOWNLOADS !== '1', 'Run after staging actual desktop packages.');
+  test.skip(process.env.PLAYWRIGHT_CHECK_DOWNLOADS !== '1', 'Run after staging actual desktop packages.');
   await page.goto('/#downloads');
   const links = page.locator('.downloads li a');
   await expect(links).not.toHaveCount(0);
