@@ -29,11 +29,11 @@ test('message catalogs cover the same keys and format placeholders', () => {
 });
 
 test('support helpers hide empty social and donate fields', () => {
-  assert.equal(hasSocial(), false);
-  assert.deepEqual(socialLinks(), []);
+  assert.equal(hasSocial(), true);
+  assert.deepEqual(socialLinks(), [{ id: 'github', url: 'https://github.com/torintran/torin-tools' }]);
   assert.equal(hasDonate(), false);
   assert.deepEqual(donateMethods(), []);
-  assert.equal(social.github, '');
+  assert.equal(social.x, '');
   assert.equal(donate.buyMeACoffee, '');
   assert.equal(donate.momo.phone, '');
   assert.equal(donate.bankVn.accountNumber, '');

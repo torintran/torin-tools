@@ -48,6 +48,7 @@ export const vi: MessageCatalog = {
   'downloads.install': 'Cài Torin Tools',
   'downloads.desktopTitle': 'Tải bản desktop',
   'downloads.checking': 'Đang kiểm tra gói…',
+  'downloads.github': 'Tải bộ cài trên GitHub',
   'downloads.empty': 'Không có gói desktop trên bản cài này.',
   'downloads.sha': 'SHA-256 {hash}',
 

@@ -31,4 +31,4 @@ Output is under `src-tauri/target/x86_64-pc-windows-msvc/release/`. The NSIS ins
 
 To host packages in the app's Downloads page, place them under `dist/downloads/` after the web build and run `node scripts/checksums.mjs dist/downloads --portal`. For Docker, mount that directory and its generated `downloads.json` read-only as shown in [docker-compose.yml](../docker-compose.yml).
 
-The web app reads the same-origin `version.json`. A Windows build can read a fixed HTTPS URL when `UPDATE_MANIFEST_URL` is set at build time. These checks report update availability. Installation starts when the user downloads and opens the package.
+The update button reads the latest stable GitHub Release. A Windows build can use a fixed HTTPS manifest when `UPDATE_MANIFEST_URL` is set at build time. Keep `https://api.github.com` in the web CSP for the default check. These checks report update availability. Installation starts when the user downloads and opens the package.

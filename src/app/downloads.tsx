@@ -1,7 +1,7 @@
 import { Button, Code, Paper } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { useT } from '../i18n/context.tsx';
-import { Updates } from './updates.tsx';
+import { latestReleasePage, Updates } from './updates.tsx';
 
 type Artifact = { name: string; file: string; sha256: string };
 
@@ -30,6 +30,9 @@ export function Downloads({ install, installApp }: { install: boolean; installAp
     </Paper>
     <Paper component="section" className="panel downloads">
       <h2>{t('downloads.desktopTitle')}</h2>
+      <Button component="a" href={latestReleasePage} target="_blank" rel="noopener noreferrer" variant="filled">
+        {t('downloads.github')}
+      </Button>
       {loading ? <p role="status">{t('downloads.checking')}</p> : artifacts.length ? <ul>
         {artifacts.map((artifact) => <li key={artifact.file}><a href={artifact.file} download>{artifact.name}</a>
           <Code>{t('downloads.sha', { hash: artifact.sha256 })}</Code></li>)}

@@ -4,6 +4,9 @@ import { useState } from 'react';
 import { version as installedVersion } from '../../package.json';
 import { useT } from '../i18n/context.tsx';
 
+export const latestReleasePage = 'https://github.com/torintran/torin-tools/releases/latest';
+const latestReleaseApi = 'https://api.github.com/repos/torintran/torin-tools/releases/latest';
+
 export function parseVersion(input: unknown): number[] | undefined {
   if (typeof input !== 'string' || !/^(?:0|[1-9]\d{0,5})(?:\.(?:0|[1-9]\d{0,5})){2}$/.test(input)) return;
   return input.split('.').map(Number);
@@ -24,20 +27,16 @@ export function Updates() {
     setChecking(true);
     setStatus('');
     try {
-      let result: { version?: unknown } | null;
-      if (isTauri()) {
-        result = await invoke<typeof result>('check_version');
-      } else {
-        const response = await fetch('./version.json', {
+      let result = isTauri() ? await invoke<{ version?: unknown } | null>('check_version') : null;
+      if (result === null) {
+        const response = await fetch(latestReleaseApi, {
           credentials: 'omit', cache: 'no-store', redirect: 'error', referrerPolicy: 'no-referrer',
           signal: AbortSignal.timeout(5000),
         });
         if (!response.ok) throw new Error('Unavailable version manifest');
-        result = await response.json();
-      }
-      if (result === null) {
-        setStatus(t('updates.noServer'));
-        return;
+        const release = await response.json();
+        result = { version: typeof release?.tag_name === 'string' && release.tag_name.startsWith('v')
+          ? release.tag_name.slice(1) : undefined };
       }
       const latest = parseVersion(result.version);
       if (!latest) throw new Error('Invalid version manifest');

@@ -61,8 +61,10 @@ try {
   });
   assert.equal(result, 'Invalid Postman request.');
   await page.getByRole('link', { name: 'Downloads' }).click();
+  await page.route('https://api.github.com/repos/torintran/torin-tools/releases/latest', route =>
+    route.fulfill({ json: { tag_name: 'v99.0.0' }, headers: { 'Access-Control-Allow-Origin': '*' } }));
   await page.getByRole('button', { name: 'Check for updates' }).click();
-  await page.getByText('This Windows build has no update server configured.').waitFor();
+  await page.getByText('Version 99.0.0 is available.', { exact: false }).waitFor();
   console.log('Windows portable launched with WebView2. Base64, native IPC route guard, and update configuration passed.');
 } finally {
   await browser?.close();

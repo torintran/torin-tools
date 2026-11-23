@@ -17,7 +17,7 @@ Host hoặc CDN có thể thấy IP và các thông tin HTTP cơ bản nếu h�
 Server đi kèm gửi `Referrer-Policy: no-referrer`, `X-Content-Type-Options: nosniff` và Content Security Policy giới hạn script, stylesheet, worker, fetch và form. Nếu chỉ chép các file web lên nền tảng khác, thêm các header tương đương. Ví dụ CSP cho host tĩnh:
 
 ```text
-Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; worker-src 'self'; connect-src 'self' https://api.postman.com; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'
+Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; worker-src 'self'; connect-src 'self' https://api.github.com https://api.postman.com; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'
 Referrer-Policy: no-referrer
 X-Content-Type-Options: nosniff
 ```

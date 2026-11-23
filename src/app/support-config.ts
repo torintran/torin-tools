@@ -1,6 +1,6 @@
 /** Fill any field to show it on the About page. Empty values stay hidden. */
 export const social = {
-  github: '',
+  github: 'https://github.com/torintran/torin-tools',
   x: '',
   telegram: '',
 };

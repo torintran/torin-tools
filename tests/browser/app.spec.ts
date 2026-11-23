@@ -241,14 +241,16 @@ test('staged Downloads point to packages matching the displayed checksums', asyn
   }
 });
 
-test('update check only reads a public version manifest and compares versions locally', async ({ page, context }) => {
+test('update check only reads the public GitHub release and compares versions locally', async ({ page, context }) => {
   const requests: { url: string; credentials: string | null; body: string | null }[] = [];
-  await context.route('**/version.json', async (route) => {
+  await context.route('https://api.github.com/repos/torintran/torin-tools/releases/latest', async (route) => {
     const request = route.request();
     requests.push({ url: request.url(), credentials: await request.headerValue('x-api-key'), body: request.postData() });
-    await route.fulfill({ json: { version: '1.0.0' } });
+    await route.fulfill({ json: { tag_name: 'v1.0.0' } });
   });
   await page.goto('/#downloads');
+  await expect(page.getByRole('link', { name: 'Download installer on GitHub' }))
+    .toHaveAttribute('href', 'https://github.com/torintran/torin-tools/releases/latest');
   expect(requests).toHaveLength(0);
   await page.getByRole('button', { name: 'Check for updates' }).click();
   await expect(page.getByText('Version 1.0.0 is available.', { exact: false })).toBeVisible();
@@ -292,12 +294,14 @@ test('language switch persists only after an explicit choice and About hides emp
   await openMobileMenu(page);
   await page.getByRole('link', { name: 'Giới thiệu' }).click();
   await expect(page.getByRole('heading', { name: 'Giới thiệu' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Mạng xã hội' })).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Mạng xã hội' })).toBeVisible();
+  await expect(page.locator('[aria-labelledby="about-social"]').getByRole('link', { name: 'GitHub' }))
+    .toHaveAttribute('href', 'https://github.com/torintran/torin-tools');
   await expect(page.getByRole('heading', { name: 'Ủng hộ dự án' })).toHaveCount(0);
   await expect(page.getByRole('heading', { name: 'Giấy phép' })).toBeVisible();
   await page.getByRole('button', { name: 'EN', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'About' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Social' })).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Social' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Support the project' })).toHaveCount(0);
 });
 

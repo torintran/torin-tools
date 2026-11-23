@@ -46,6 +46,7 @@ export const en = {
   'downloads.install': 'Install Torin Tools',
   'downloads.desktopTitle': 'Desktop downloads',
   'downloads.checking': 'Checking for packages…',
+  'downloads.github': 'Download installer on GitHub',
   'downloads.empty': 'No desktop packages are available on this installation.',
   'downloads.sha': 'SHA-256 {hash}',
 
