@@ -25,8 +25,9 @@ jobs:
       - run: |
           mkdir artifacts
           cp LICENSE NOTICE dist/
+          version=$(node -p "require('./package.json').version")
           cd dist
-          zip -qr ../artifacts/torin-web-0.2.1.zip .
+          zip -qr "../artifacts/torin-web-${version}.zip" .
           cd ..
           node scripts/checksums.mjs artifacts
       - uses: actions/upload-artifact@v4
@@ -55,7 +56,9 @@ jobs:
           if (!$installer) { throw 'NSIS installer missing' }
           Copy-Item $installer.FullName 'artifacts/torin-tools-windows-x64-setup.exe'
           Copy-Item -LiteralPath 'LICENSE','NOTICE' -Destination 'artifacts'
-          Compress-Archive -LiteralPath "$release/torin-tools.exe",'LICENSE','NOTICE' -DestinationPath 'artifacts/torin-tools-windows-x64-portable.zip'
+          $licenses = Get-ChildItem dist -Filter '*-LICENSE.txt' -File | Select-Object -ExpandProperty FullName
+          $portableFiles = @("$release/torin-tools.exe",'LICENSE','NOTICE') + @($licenses)
+          Compress-Archive -LiteralPath $portableFiles -DestinationPath 'artifacts/torin-tools-windows-x64-portable.zip'
           Expand-Archive -LiteralPath 'artifacts/torin-tools-windows-x64-portable.zip' -DestinationPath 'test-results/portable'
           node scripts/smoke-windows.mjs test-results/portable/torin-tools.exe
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
