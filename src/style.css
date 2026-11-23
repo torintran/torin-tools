@@ -166,7 +166,12 @@ a { color: var(--mantine-color-anchor); text-underline-offset: .17em; }
   color: var(--gold);
 }
 
-.layout > main { width: min(1240px, 100%); min-width: 0; padding: clamp(16px, 2.4vw, 28px) clamp(16px, 3vw, 40px); }
+.layout > main {
+  width: min(1240px, 100%);
+  min-width: 0;
+  justify-self: center;
+  padding: clamp(16px, 2.4vw, 28px) clamp(16px, 3vw, 40px);
+}
 .layout header { margin-bottom: 12px; }
 .layout h1 { color: var(--jade); font-size: clamp(22px, 2.8vw, 32px); line-height: 1.2; letter-spacing: -.04em; }
 .layout header p { margin-top: 6px; color: var(--muted); font-size: 14px; line-height: 1.45; }
