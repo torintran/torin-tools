@@ -36,12 +36,15 @@ try {
   browser = await chromium.connectOverCDP(url);
   const context = browser.contexts()[0];
   const page = context.pages()[0] ?? await context.waitForEvent('page', { timeout: 10_000 });
-  await page.getByRole('navigation').getByRole('link', { name: 'Base64', exact: true }).click({ timeout: 10_000 });
+  const nav = page.getByRole('navigation');
+  await nav.getByText('Encoding', { exact: true }).click({ timeout: 10_000 });
+  await nav.getByRole('link', { name: 'Base64', exact: true }).click({ timeout: 10_000 });
   await page.getByRole('heading', { name: 'Base64', exact: true }).waitFor({ timeout: 10_000 });
   await page.getByLabel('Input').fill('Tiếng Việt 🐉');
   await page.getByRole('button', { name: 'Encode text' }).click();
   assert.equal(await page.getByLabel('Output').inputValue(), Buffer.from('Tiếng Việt 🐉').toString('base64'));
-  await page.getByRole('link', { name: 'Postman Backup' }).click();
+  await nav.getByText('API tools', { exact: true }).click();
+  await nav.getByRole('link', { name: 'Postman Backup' }).click();
   assert.equal(await page.getByLabel('Connection').count(), 0);
   await page.getByText('Backup requests go to Postman over HTTPS.', { exact: false }).waitFor();
   const result = await page.evaluate(async () => {

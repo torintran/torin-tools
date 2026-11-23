@@ -1,10 +1,24 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 import { createHash } from 'node:crypto';
 import { unzipSync } from 'fflate';
 
 const id = '12345678-1234-1234-1234-123456789abc';
 const key = 'synthetic-browser-key';
 const jwt = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzeW50aGV0aWMtdG9rZW4ifQ.YQ';
+
+async function openMobileMenu(page: Page) {
+  const menu = page.getByRole('button', { name: 'Menu', exact: true });
+  if (await menu.isVisible()) await menu.click();
+}
+
+async function openToolFromNavigation(page: Page, group: string, tool: string) {
+  await openMobileMenu(page);
+  const nav = page.getByRole('navigation');
+  await expect(nav).toBeVisible();
+  const link = nav.getByRole('link', { name: tool, exact: true });
+  if (!await link.isVisible()) await nav.getByText(group, { exact: true }).click();
+  await link.click();
+}
 
 test('local tools work offline, with balanced viewport and no stored token', async ({ page, context }) => {
   await page.goto('/');
@@ -36,15 +50,15 @@ test('local tools work offline, with balanced viewport and no stored token', asy
   await page.getByRole('textbox', { name: 'Input', exact: true }).fill('🦄');
   await page.getByRole('button', { name: 'Encode text' }).click();
   await expect(page.getByLabel('Output')).toHaveValue('8J-mhA');
-  await page.getByRole('link', { name: 'JWT Decoder' }).click();
+  await openToolFromNavigation(page, 'Tokens', 'JWT Decoder');
   await page.getByLabel('Signed JWT').fill(jwt);
   await page.getByRole('button', { name: 'Decode JWT' }).click();
   await expect(page.getByText('"sub": "synthetic-token"', { exact: false })).toBeVisible();
   await page.getByRole('button', { name: 'Fields' }).click();
   await expect(page.getByText('Subject', { exact: true })).toBeVisible();
   await expect(page.getByText('HMAC with SHA-256')).toBeVisible();
-  await page.getByRole('link', { name: 'Base64', exact: true }).click();
-  await page.getByRole('link', { name: 'JWT Decoder' }).click();
+  await openToolFromNavigation(page, 'Encoding', 'Base64');
+  await openToolFromNavigation(page, 'Tokens', 'JWT Decoder');
   await expect(page.getByLabel('Signed JWT')).toHaveValue('');
   const state = await page.evaluate(() => ({
     storage: [localStorage.length, sessionStorage.length],
@@ -275,6 +289,7 @@ test('language switch persists only after an explicit choice and About hides emp
   await expect(page.getByRole('heading', { name: 'Tất cả công cụ' })).toBeVisible();
   expect(await page.evaluate(() => Object.keys(localStorage))).toEqual(['torin.locale.v1']);
   expect(await page.evaluate(() => localStorage.getItem('torin.locale.v1'))).toBe('vi');
+  await openMobileMenu(page);
   await page.getByRole('link', { name: 'Giới thiệu' }).click();
   await expect(page.getByRole('heading', { name: 'Giới thiệu' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Mạng xã hội' })).toHaveCount(0);
@@ -286,8 +301,9 @@ test('language switch persists only after an explicit choice and About hides emp
   await expect(page.getByRole('heading', { name: 'Support the project' })).toHaveCount(0);
 });
 
-test('quick search jumps to a tool from the header', async ({ page }) => {
+test('quick search jumps to a tool from the header or mobile menu', async ({ page }) => {
   await page.goto('/');
+  await openMobileMenu(page);
   const search = page.getByRole('combobox', { name: 'Quick search tools' });
   await search.fill('jwt');
   await expect(page.getByRole('option', { name: /JWT Decoder/ })).toBeVisible();
