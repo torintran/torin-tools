@@ -1,0 +1,20 @@
+services:
+  web:
+    build: .
+    image: torin-tools-web
+    container_name: torin-tools-web
+    init: true
+    read_only: true
+    ports:
+      - "127.0.0.1:4289:4173"
+    environment:
+      PORT: "4173"
+      TORIN_LISTEN: "0.0.0.0"
+      # Uncomment to enable the optional Postman gateway (needs matching TORIN_ORIGIN):
+      # TORIN_GATEWAY: "1"
+      # TORIN_ORIGIN: "https://tools.example.com"
+    # Optional: publish desktop packages on the Downloads page
+    # volumes:
+    #   - ./downloads:/app/dist/downloads:ro
+    #   - ./downloads.json:/app/dist/downloads.json:ro
+    restart: unless-stopped

@@ -1,0 +1,25 @@
+node_modules/
+dist/
+target/
+.toolchain/
+artifacts/
+playwright-report/
+test-results/
+/src-tauri/gen/schemas/
+
+# Local credentials, signing material, and exports
+.env
+.env.*
+.envrc
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+exports/
+*.zip
+
+# Local logs and OS metadata
+*.log
+.DS_Store
+Thumbs.db

@@ -1,0 +1,14 @@
+{
+  "id": "./",
+  "name": "Torin Tools",
+  "short_name": "Torin Tools",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7f3e8",
+  "theme_color": "#103d35",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

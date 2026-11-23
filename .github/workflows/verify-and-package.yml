@@ -1,0 +1,67 @@
+name: Verify and package
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  web:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:browser
+      - run: |
+          mkdir artifacts
+          cp LICENSE NOTICE dist/
+          cd dist
+          zip -qr ../artifacts/torin-web-0.2.1.zip .
+          cd ..
+          node scripts/checksums.mjs artifacts
+      - uses: actions/upload-artifact@v4
+        with:
+          name: torin-web
+          path: artifacts/
+          if-no-files-found: error
+
+  windows:
+    needs: web
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: rustup target add x86_64-pc-windows-msvc
+      - run: npm ci
+      - run: npm run tauri -- build --target x86_64-pc-windows-msvc --bundles nsis -- --locked
+      - shell: pwsh
+        run: |
+          New-Item -ItemType Directory artifacts | Out-Null
+          $release = 'src-tauri/target/x86_64-pc-windows-msvc/release'
+          $installer = Get-ChildItem "$release/bundle/nsis" -Filter '*.exe' | Select-Object -First 1
+          if (!$installer) { throw 'NSIS installer missing' }
+          Copy-Item $installer.FullName 'artifacts/torin-tools-windows-x64-setup.exe'
+          Copy-Item -LiteralPath 'LICENSE','NOTICE' -Destination 'artifacts'
+          Compress-Archive -LiteralPath "$release/torin-tools.exe",'LICENSE','NOTICE' -DestinationPath 'artifacts/torin-tools-windows-x64-portable.zip'
+          Expand-Archive -LiteralPath 'artifacts/torin-tools-windows-x64-portable.zip' -DestinationPath 'test-results/portable'
+          node scripts/smoke-windows.mjs test-results/portable/torin-tools.exe
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - run: node scripts/checksums.mjs artifacts
+      - uses: actions/upload-artifact@v4
+        with:
+          name: torin-windows-x64
+          path: artifacts/
+          if-no-files-found: error
