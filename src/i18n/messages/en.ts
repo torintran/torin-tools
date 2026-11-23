@@ -28,6 +28,7 @@ export const en = {
 
   'groups.encoding': 'Encoding',
   'groups.converters': 'Converters',
+  'groups.text': 'Text',
   'groups.tokens': 'Tokens',
   'groups.generators': 'Generators',
   'groups.api': 'API tools',
@@ -344,6 +345,16 @@ export const en = {
   'jsonFormatter.minifyAction': 'Minify JSON',
   'jsonFormatter.copy': 'Copy output',
   'jsonFormatter.failed': 'JSON formatting failed.',
+
+  'whitespaceRemover.name': 'Whitespace remover',
+  'whitespaceRemover.description': 'Remove all whitespace characters from text, including spaces, tabs and newlines.',
+  'whitespaceRemover.action.strip': 'Removed whitespace',
+  'whitespaceRemover.note': 'Removes characters matched by JavaScript \\s: ECMAScript WhiteSpace and LineTerminator (spaces, tabs, newlines, and related Unicode whitespace).',
+  'whitespaceRemover.live': 'Convert as I type',
+  'whitespaceRemover.placeholder.input': 'Paste text with spaces or line breaks…',
+  'whitespaceRemover.placeholder.output': 'Text without whitespace appears here…',
+  'whitespaceRemover.stripAction': 'Remove whitespace',
+  'whitespaceRemover.copy': 'Copy output',
 } as const;
 
 export type MessageKey = keyof typeof en;

@@ -10,6 +10,7 @@ Cập nhật 23/11/2026. Đây là backlog nội bộ của Torin: công cụ đ
 | URL encoder | [url-encoder](../src/tools/url-encoder/) | Component, full URI, form-urlencoded |
 | Date-time converter | [date-time-converter](../src/tools/date-time-converter/) | ISO / RFC / Unix / Mongo / Excel |
 | JSON formatter | [json-formatter](../src/tools/json-formatter/) | Format/minify; tùy chọn JSONC (comment + trailing comma) |
+| Whitespace remover | [whitespace-remover](../src/tools/whitespace-remover/) | Xóa mọi ký tự khoảng trắng (`\s`) |
 | JWT | [jwt](../src/tools/jwt/) | Đọc, ký và xác minh chữ ký |
 | UUIDs generator | [uuid](../src/tools/uuid/) | RFC 9562: NIL, Max, v1, v3–v7 |
 | Postman Backup | [postman](../src/tools/postman/) | Tiện ích riêng Torin |

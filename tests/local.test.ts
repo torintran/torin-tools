@@ -15,6 +15,7 @@ import {
   convertDateTime, formatExcelSerial, formatMongoObjectId, type DateOutputId,
 } from '../src/tools/date-time-converter/convert.ts';
 import { formatJson, stripJsonc } from '../src/tools/json-formatter/format.ts';
+import { removeWhitespace } from '../src/tools/whitespace-remover/strip.ts';
 
 function dateOut(input: string, format: Parameters<typeof convertDateTime>[1], id: DateOutputId) {
   return convertDateTime(input, format).outputs.find((row) => row.id === id)?.value;
@@ -142,6 +143,14 @@ test('Date-time converter maps ISO, Unix, RFC 7231, Mongo ObjectId and Excel for
   assert.match(dateOut('2024-01-01 00:00:00', 'iso9075', 'iso9075') ?? '', /00:00:00$/);
   assert.throws(() => convertDateTime(''), /date-time/i);
   assert.throws(() => convertDateTime('not-a-date'), /Unrecognized|valid/i);
+});
+
+test('Whitespace remover strips spaces, tabs, newlines and NBSP', () => {
+  assert.equal(removeWhitespace('a b\tc\nd'), 'abcd');
+  assert.equal(removeWhitespace('a\u00A0b'), 'ab');
+  assert.equal(removeWhitespace('abc'), 'abc');
+  assert.equal(removeWhitespace('  \n\t  '), '');
+  assert.equal(removeWhitespace(''), '');
 });
 
 test('JSON formatter pretty-prints, minifies and rejects invalid input', () => {

@@ -7,7 +7,7 @@ import type { Translate } from '../i18n/translate.ts';
 import type { ToolDefinition } from './tool.ts';
 
 const groupOrder: MessageKey[] = [
-  'groups.encoding', 'groups.converters', 'groups.tokens', 'groups.generators', 'groups.api',
+  'groups.encoding', 'groups.converters', 'groups.text', 'groups.tokens', 'groups.generators', 'groups.api',
 ];
 const definitions = import.meta.glob<ToolDefinition>('../tools/*/tool.ts', { eager: true, import: 'default' });
 const reservedIds = new Set(['tools', 'history', 'downloads', 'about']);

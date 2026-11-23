@@ -9,5 +9,6 @@
 | URL encoder | [Đặc tả](url-encoder/spec.md) | [23/11/2026 · Hồ sơ ban đầu](url-encoder/archive/2026-11-23-initial.md) |
 | Date-time converter | [Đặc tả](date-time-converter/spec.md) | [23/11/2026 · Hồ sơ ban đầu](date-time-converter/archive/2026-11-23-initial.md) |
 | JSON formatter | [Đặc tả](json-formatter/spec.md) | [23/11/2026 · Hồ sơ ban đầu](json-formatter/archive/2026-11-23-initial.md) · [JSONC](json-formatter/archive/2026-11-23-jsonc.md) |
+| Whitespace remover | [Đặc tả](whitespace-remover/spec.md) | [23/11/2026 · Hồ sơ ban đầu](whitespace-remover/archive/2026-11-23-initial.md) |
 
 [Quy chuẩn phát triển](../tool-development.md) · [Mẫu hồ sơ](TEMPLATE.md).

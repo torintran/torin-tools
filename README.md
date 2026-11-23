@@ -1,6 +1,6 @@
 # Torin Tools
 
-Bộ tiện ích developer, gồm Base64, URL encoder, Date-time converter, JSON formatter, JWT Decoder, UUIDs generator và Postman Backup. Torin Tools có mã ứng dụng, giao diện và icon được viết riêng. Hỗ trợ giao diện tiếng Anh và tiếng Việt.
+Bộ tiện ích developer, gồm Base64, URL encoder, Date-time converter, JSON formatter, Whitespace remover, JWT Decoder, UUIDs generator và Postman Backup. Torin Tools có mã ứng dụng, giao diện và icon được viết riêng. Hỗ trợ giao diện tiếng Anh và tiếng Việt.
 
 [Lộ trình công cụ](docs/roadmap.md) · [Hồ sơ công cụ](docs/tools/README.md).
 

@@ -30,6 +30,7 @@ export const vi: MessageCatalog = {
 
   'groups.encoding': 'Mã hóa',
   'groups.converters': 'Chuyển đổi',
+  'groups.text': 'Văn bản',
   'groups.tokens': 'Token',
   'groups.generators': 'Sinh mã',
   'groups.api': 'Công cụ API',
@@ -346,4 +347,14 @@ export const vi: MessageCatalog = {
   'jsonFormatter.minifyAction': 'Rút gọn JSON',
   'jsonFormatter.copy': 'Sao chép kết quả',
   'jsonFormatter.failed': 'Định dạng JSON thất bại.',
+
+  'whitespaceRemover.name': 'Whitespace remover',
+  'whitespaceRemover.description': 'Xóa mọi ký tự khoảng trắng khỏi văn bản, gồm space, tab và xuống dòng.',
+  'whitespaceRemover.action.strip': 'Đã xóa khoảng trắng',
+  'whitespaceRemover.note': 'Xóa các ký tự khớp \\s trong JavaScript: WhiteSpace và LineTerminator của ECMAScript (space, tab, xuống dòng và khoảng trắng Unicode liên quan).',
+  'whitespaceRemover.live': 'Chuyển đổi khi gõ',
+  'whitespaceRemover.placeholder.input': 'Dán văn bản có khoảng trắng hoặc xuống dòng…',
+  'whitespaceRemover.placeholder.output': 'Văn bản không khoảng trắng hiện ở đây…',
+  'whitespaceRemover.stripAction': 'Xóa khoảng trắng',
+  'whitespaceRemover.copy': 'Sao chép kết quả',
 };
