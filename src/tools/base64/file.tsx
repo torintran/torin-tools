@@ -1,9 +1,9 @@
-import { Alert, Button, FileInput, Paper } from '@mantine/core';
-import { FileUp } from 'lucide-react';
-import { useEffect, useRef, useState, type DragEvent } from 'react';
+import { Alert, Button, Paper } from '@mantine/core';
+import { useEffect, useRef, useState } from 'react';
 import type { ToolViewProps } from '../../app/tool.ts';
 import { useT } from '../../i18n/context.tsx';
 import { TextResultPreview } from '../../shared/text-result-preview.tsx';
+import { FileDropInput } from '../../shared/file-drop-input.tsx';
 import { Base64Options, defaultBase64Options } from './options.tsx';
 import { MAX_BASE64_FILE_BYTES, type FileOptions } from './convert.ts';
 import type { FileWorkerResult } from './file-worker.ts';
@@ -16,9 +16,7 @@ export function Base64File({ recordActivity }: ToolViewProps) {
   const [download, setDownload] = useState<{ url: string; name: string; preview?: string }>();
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
-  const [dragging, setDragging] = useState(false);
   const worker = useRef<Worker | undefined>(undefined);
-  const resetFilePicker = useRef<(() => void) | null>(null);
 
   useEffect(() => () => {
     worker.current?.terminate();
@@ -33,27 +31,6 @@ export function Base64File({ recordActivity }: ToolViewProps) {
     if (worker.current) return;
     setFile(next ?? undefined);
     resetResult();
-  }
-
-  function onDragOver(event: DragEvent<HTMLDivElement>) {
-    if (!event.dataTransfer.types.includes('Files')) return;
-    event.preventDefault();
-    event.dataTransfer.dropEffect = busy ? 'none' : 'copy';
-    setDragging(!busy);
-  }
-
-  function onDrop(event: DragEvent<HTMLDivElement>) {
-    setDragging(false);
-    const { files, items, types } = event.dataTransfer;
-    if (!types.includes('Files')) return;
-    event.preventDefault();
-    if (worker.current) return;
-    if (files.length !== 1 || items[0]?.webkitGetAsEntry?.()?.isDirectory) {
-      setError(t('common.dropSingleFile'));
-      return;
-    }
-    resetFilePicker.current?.();
-    selectFile(files[0]);
   }
 
   function cancel() {
@@ -100,14 +77,8 @@ export function Base64File({ recordActivity }: ToolViewProps) {
 
   return <Paper component="form" className="panel" autoComplete="off" onSubmit={start}>
     <Base64Options disabled={busy} value={options} change={(next) => { setOptions(next); resetResult(); }} />
-    <div className="file-drop" data-dragging={dragging || undefined} onDragOver={onDragOver} onDrop={onDrop}
-      onDragLeave={(event) => {
-        if (!(event.relatedTarget instanceof Node) || !event.currentTarget.contains(event.relatedTarget)) setDragging(false);
-      }}>
-      <FileInput resetRef={resetFilePicker} label={t('base64.fileLabel')} description={t('common.dropFile')}
-        placeholder={t('base64.filePlaceholder')} value={file ?? null}
-        leftSection={<FileUp size={18} aria-hidden="true" />} disabled={busy} onChange={selectFile} />
-    </div>
+    <FileDropInput label={t('base64.fileLabel')} file={file} disabled={busy} onChange={selectFile}
+      onInvalidDrop={() => setError(t('common.dropSingleFile'))} />
     <p className="hint">{t('base64.fileHint')}</p>
     {error && <Alert className="error" color="red">{error}</Alert>}
     {busy && <p className="hint" role="status">{t('base64.fileBusy')}</p>}

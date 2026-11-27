@@ -9,6 +9,7 @@ await copyFile(new URL('../node_modules/@peculiar/x509/LICENSE', import.meta.url
 await copyFile(new URL('../node_modules/reflect-metadata/LICENSE', import.meta.url), new URL('REFLECT-METADATA-LICENSE.txt', root));
 await copyFile(new URL('../node_modules/oui-data/LICENSE', import.meta.url), new URL('OUI-DATA-LICENSE.txt', root));
 await copyFile(new URL('../node_modules/diff/LICENSE', import.meta.url), new URL('JSDIFF-LICENSE.txt', root));
+await copyFile(new URL('../node_modules/node-forge/LICENSE', import.meta.url), new URL('NODE-FORGE-LICENSE.txt', root));
 await copyFile(new URL('../node_modules/@mantine/core/LICENSE', import.meta.url), new URL('MANTINE-LICENSE.txt', root));
 await copyFile(new URL('../node_modules/lucide-react/LICENSE', import.meta.url), new URL('LUCIDE-LICENSE.txt', root));
 await copyFile(new URL('../node_modules/@fontsource/be-vietnam-pro/LICENSE', import.meta.url), new URL('BE-VIETNAM-PRO-LICENSE.txt', root));

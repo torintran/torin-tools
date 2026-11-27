@@ -3,6 +3,7 @@
 | Dữ liệu | Xử lý | Lưu trữ |
 | --- | --- | --- |
 | Base64, tệp, JWT, khóa và kết quả | Xử lý cục bộ trong bộ nhớ của trình duyệt hoặc WebView. File Base64 chạy trong Web Worker. Ký và xác minh JWT dùng Web Crypto với khóa người dùng nhập. | Torin không lưu dữ liệu này. Copy ghi vào clipboard hệ điều hành và Download tạo file khi người dùng chọn. |
+| Tệp P12/PFX, mật khẩu và PEM | Web Worker đọc tệp và xác minh MAC cục bộ. Khóa riêng chỉ hiện sau khi người dùng chọn. | Torin không tải lên máy chủ hay lưu hồ sơ. PEM chỉ ra clipboard hoặc thành tệp khi người dùng bấm sao chép hoặc tải. |
 | Ngôn ngữ giao diện | Người dùng chọn EN hoặc VI trên thanh công cụ. Lần đầu theo `navigator.language` mà không ghi storage. | Chỉ khi người dùng đổi ngôn ngữ, Torin ghi `torin.locale.v1` vào localStorage. |
 | API key và workspace Postman | Direct gửi thẳng tới Postman qua HTTPS. Relay tự host đọc key và workspace trong RAM để chuyển tiếp khi người dùng chọn gateway. | Torin không lưu các trường này vào lịch sử, cơ sở dữ liệu, cookie hay cache. Gateway không ghi request, response hoặc header vào log. |
 | JSON và ZIP backup | Dữ liệu trả về từ Postman đi qua kết nối đã chọn. Client tạo ZIP trong Worker. | ZIP chỉ thành file khi người dùng chọn Download hoặc Save. ZIP chưa mã hóa và có thể chứa thông tin bí mật. |

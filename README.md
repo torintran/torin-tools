@@ -1,6 +1,6 @@
 # Torin Tools
 
-Local-first developer utilities for the web and Windows, with an English and Vietnamese interface. Eleven tools process data on your device. Postman Backup connects to the Postman API.
+Local-first developer utilities for the web and Windows, with an English and Vietnamese interface. Twelve tools process data on your device. Postman Backup connects to the Postman API.
 
 [Downloads](https://github.com/torintran/torin-tools/releases) · [Roadmap](docs/roadmap.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md)
 
@@ -16,6 +16,7 @@ Local-first developer utilities for the web and Windows, with an English and Vie
 | [JWT Decoder](docs/tools/jwt/spec.md) | Inspect claims, sign JWTs, and verify signatures with a supplied key. |
 | [UUIDs generator](docs/tools/uuid/spec.md) | Generate Nil, Max, and UUID versions 1, 3, 4, 5, 6, and 7. |
 | [CSR Generator](docs/tools/csr/spec.md) | Generate a PKCS #10 CSR and RSA private key locally. |
+| [P12 to PEM](docs/tools/pkcs12/spec.md) | Extract certificates and private keys from a `.p12` or `.pfx` file locally. |
 | [MAC address lookup](docs/tools/mac-address-lookup/spec.md) | Find the registered organization for a MAC address or OUI. |
 | [Temperature converter](docs/tools/temperature-converter/spec.md) | Convert Celsius, Fahrenheit, and kelvin. |
 | [Text diff](docs/tools/text-diff/spec.md) | Compare texts and highlight added and removed lines. |

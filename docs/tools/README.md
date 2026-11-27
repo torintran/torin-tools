@@ -11,6 +11,7 @@
 | JSON formatter | [Đặc tả](json-formatter/spec.md) | [23/11/2026 · Hồ sơ ban đầu](json-formatter/archive/2026-11-23-initial.md) · [JSONC](json-formatter/archive/2026-11-23-jsonc.md) |
 | Whitespace remover | [Đặc tả](whitespace-remover/spec.md) | [23/11/2026 · Hồ sơ ban đầu](whitespace-remover/archive/2026-11-23-initial.md) |
 | CSR Generator | [Đặc tả](csr/spec.md) | [Hồ sơ ban đầu](csr/archive/2026-11-23-initial.md) |
+| P12 sang PEM | [Đặc tả](pkcs12/spec.md) | [Hồ sơ ban đầu](pkcs12/archive/2026-11-27-initial.md) |
 | MAC address lookup | [Đặc tả](mac-address-lookup/spec.md) | [Hồ sơ ban đầu](mac-address-lookup/archive/2026-11-23-initial.md) |
 | Temperature converter | [Đặc tả](temperature-converter/spec.md) | [Hồ sơ ban đầu](temperature-converter/archive/2026-11-23-initial.md) |
 | Text diff | [Đặc tả](text-diff/spec.md) | [Hồ sơ ban đầu](text-diff/archive/2026-11-23-initial.md) |
