@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.0
+
+- Added offline PKCS #12 (.p12 / .pfx) to PEM conversion for certificates and private keys.
+
 ## 0.5.0
 
 - Added offline Docker, Kubernetes and Git & GitHub cheat sheets with English and Vietnamese explanations, command copy buttons and official references.
